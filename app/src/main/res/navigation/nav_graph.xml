@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="co.edu.udea.compumovil.gr07_20251.udeafood.HomeFragment"
+        android:label="Inicio" />
+
+    <fragment
+        android:id="@+id/catalogFragment"
+        android:name="co.edu.udea.compumovil.gr07_20251.udeafood.CatalogFragment"
+        android:label="Catálogo" />
+
+    <fragment
+        android:id="@+id/mapFragment"
+        android:name="co.edu.udea.compumovil.gr07_20251.udeafood.MapFragment"
+        android:label="Mapa" />
+
+    <fragment
+        android:id="@+id/favoritesFragment"
+        android:name="co.edu.udea.compumovil.gr07_20251.udeafood.FavoritesFragment"
+        android:label="Favoritos" />
+
+</navigation>

@@ -1,0 +1,19 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/homeFragment"
+        android:icon="@android:drawable/ic_menu_view"
+        android:title="Inicio" />
+    <item
+        android:id="@+id/catalogFragment"
+        android:icon="@android:drawable/ic_menu_agenda"
+        android:title="Catálogo" />
+    <item
+        android:id="@+id/mapFragment"
+        android:icon="@android:drawable/ic_dialog_map"
+        android:title="Mapa" />
+    <item
+        android:id="@+id/favoritesFragment"
+        android:icon="@android:drawable/star_big_on"
+        android:title="Favoritos" />
+</menu>
+
