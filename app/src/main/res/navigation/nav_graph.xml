@@ -45,4 +45,42 @@
             app:destination="@id/loginFragment" />
     </fragment>
 
+    <fragment
+        android:id="@+id/catalogFragment"
+        android:name="co.edu.udea.compumovil.gr07_20251.udeafood.CatalogFragment"
+        android:label="Catálogo"
+        tools:layout="@layout/fragment_catalog" />
+
+    <fragment
+        android:id="@+id/restaurantDetailFragment"
+        android:name="co.edu.udea.compumovil.gr07_20251.udeafood.RestaurantDetailFragment"
+        android:label="Detalle Restaurante"
+        tools:layout="@layout/fragment_restaurant_detail">
+
+        <argument
+            android:name="name"
+            app:argType="string" />
+        <argument
+            android:name="type"
+            app:argType="string" />
+        <argument
+            android:name="hours"
+            app:argType="string" />
+        <argument
+            android:name="imageResId"
+            app:argType="integer" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/createStoreFragment"
+        android:name="co.edu.udea.compumovil.gr07_20251.udeafood.CreateStoreFragment"
+        android:label="Crear Tienda"
+        tools:layout="@layout/fragment_create_store" />
+
+    <fragment
+        android:id="@+id/addProductFragment"
+        android:name="co.edu.udea.compumovil.gr07_20251.udeafood.AddProductFragment"
+        android:label="Agregar Producto"
+        tools:layout="@layout/fragment_add_product" />
+
 </navigation>
