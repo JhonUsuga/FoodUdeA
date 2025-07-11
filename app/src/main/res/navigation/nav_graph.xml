@@ -26,6 +26,11 @@
         android:label="Favoritos" />
 
     <fragment
+        android:id="@+id/establecimientoFragment"
+        android:name="co.edu.udea.compumovil.gr07_20251.udeafood.EstablecimientoFragment"
+        android:label="Establecimiento" />
+
+    <fragment
         android:id="@+id/loginFragment"
         android:name="co.edu.udea.compumovil.gr07_20251.udeafood.LoginFragment"
         android:label="Login"

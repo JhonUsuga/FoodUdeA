@@ -8,13 +8,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ListView
 import android.widget.Toast
+import androidx.navigation.fragment.findNavController
 import co.edu.udea.compumovil.gr07_20251.udeafood.R
+import androidx.navigation.fragment.findNavController
 
 class CatalogFragment : Fragment() {
     private lateinit var listView: ListView
     val establecimientoList = arrayListOf(
-        Establecimiento("bigBurger","Big Burger","Frente al Bloque 15","Abierto",4.5,3000.0,R.drawable.bigburger),
-        Establecimiento("laEmpanada","La Empanada","Detras del Bloque 19","Cerrado",5.0,1000.0,R.drawable.laempanada)
+        Establecimiento("bigBurger","Big Burger","Frente al Bloque 15","Cerrado",4.5,3000.0,R.drawable.bigburger),
+        Establecimiento("laEmpanada","La Empanada","Detras del Bloque 19","Abierto",5.0,1000.0,R.drawable.laempanada)
     )
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -26,8 +28,7 @@ class CatalogFragment : Fragment() {
         listView.adapter = EstablecimientoAdapter(requireContext().applicationContext,establecimientoList)
 
         listView.setOnItemClickListener { parent, view, position, id ->
-            val selectedItem = parent.getItemAtPosition(position) as String
-            Toast.makeText(requireContext().applicationContext,"Algo",Toast.LENGTH_SHORT).show()
+            findNavController().navigate(R.id.establecimientoFragment)
         }
         return view
     }
