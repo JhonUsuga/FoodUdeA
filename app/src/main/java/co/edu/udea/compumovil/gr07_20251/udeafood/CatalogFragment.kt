@@ -19,17 +19,16 @@ class CatalogFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_catalog, container, false)
-    }
+    ): View? = inflater.inflate(R.layout.fragment_catalog, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         recyclerView = view.findViewById(R.id.rv_restaurants)
 
         val adapter = RestaurantAdapter(restaurants) { restaurant ->
             val bundle = Bundle().apply {
+                putString("storeId", restaurant.id)
                 putString("name", restaurant.name)
-                putString("type", restaurant.type)
+                putString("description", restaurant.description)
                 putString("hours", restaurant.hours)
                 putString("imageUrl", restaurant.imageUrl)
             }
@@ -43,12 +42,13 @@ class CatalogFragment : Fragment() {
             .addOnSuccessListener { result ->
                 restaurants.clear()
                 for (doc in result) {
+                    val id = doc.id
                     val name = doc.getString("name") ?: continue
                     val description = doc.getString("description") ?: ""
                     val hours = doc.getString("hours") ?: ""
                     val imageUrl = doc.getString("imageUrl") ?: ""
 
-                    restaurants.add(Restaurant(name, description, hours, imageUrl))
+                    restaurants.add(Restaurant(id, name, description, hours, imageUrl))
                 }
                 adapter.notifyDataSetChanged()
             }

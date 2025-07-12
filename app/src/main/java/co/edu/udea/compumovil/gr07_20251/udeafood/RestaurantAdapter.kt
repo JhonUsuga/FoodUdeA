@@ -29,7 +29,7 @@ class RestaurantAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = restaurants[position]
         holder.name.text = item.name
-        holder.type.text = item.type
+        holder.type.text = item.description
         holder.hours.text = item.hours
 
         Glide.with(holder.itemView.context)
