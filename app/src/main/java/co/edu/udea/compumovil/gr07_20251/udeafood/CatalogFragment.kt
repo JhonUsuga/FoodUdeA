@@ -16,6 +16,16 @@ class CatalogFragment : Fragment() {
     private lateinit var listView: ListView
     val establecimientoList = arrayListOf(
         Establecimiento("bigBurger","Big Burger","Frente al Bloque 15","Cerrado",4.5,3000.0,R.drawable.bigburger),
+        Establecimiento("laEmpanada","La Empanada","Detras del Bloque 19","Abierto",5.0,1000.0,R.drawable.laempanada),
+        Establecimiento("laEmpanada","La Empanada","Detras del Bloque 19","Abierto",5.0,1000.0,R.drawable.laempanada),
+        Establecimiento("laEmpanada","La Empanada","Detras del Bloque 19","Abierto",5.0,1000.0,R.drawable.laempanada),
+        Establecimiento("laEmpanada","La Empanada","Detras del Bloque 19","Abierto",5.0,1000.0,R.drawable.laempanada),
+        Establecimiento("laEmpanada","La Empanada","Detras del Bloque 19","Abierto",5.0,1000.0,R.drawable.laempanada),
+        Establecimiento("laEmpanada","La Empanada","Detras del Bloque 19","Abierto",5.0,1000.0,R.drawable.laempanada),
+        Establecimiento("laEmpanada","La Empanada","Detras del Bloque 19","Abierto",5.0,1000.0,R.drawable.laempanada),
+        Establecimiento("laEmpanada","La Empanada","Detras del Bloque 19","Abierto",5.0,1000.0,R.drawable.laempanada),
+        Establecimiento("laEmpanada","La Empanada","Detras del Bloque 19","Abierto",5.0,1000.0,R.drawable.laempanada),
+        Establecimiento("laEmpanada","La Empanada","Detras del Bloque 19","Abierto",5.0,1000.0,R.drawable.laempanada),
         Establecimiento("laEmpanada","La Empanada","Detras del Bloque 19","Abierto",5.0,1000.0,R.drawable.laempanada)
     )
     override fun onCreateView(
