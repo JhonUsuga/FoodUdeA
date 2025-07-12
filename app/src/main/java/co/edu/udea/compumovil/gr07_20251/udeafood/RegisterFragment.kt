@@ -1,15 +1,12 @@
 package co.edu.udea.compumovil.gr07_20251.udeafood
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
-import android.widget.Toast
+import android.view.*
+import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.google.firebase.firestore.FirebaseFirestore
+import java.util.*
 
 class RegisterFragment : Fragment() {
 
@@ -19,11 +16,12 @@ class RegisterFragment : Fragment() {
     private lateinit var confirmPasswordInput: EditText
     private lateinit var registerButton: Button
     private lateinit var goToLogin: TextView
+    private lateinit var firestore: FirebaseFirestore
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         val view = inflater.inflate(R.layout.fragment_register, container, false)
 
         nameInput = view.findViewById(R.id.input_name)
@@ -32,6 +30,8 @@ class RegisterFragment : Fragment() {
         confirmPasswordInput = view.findViewById(R.id.input_confirm_password)
         registerButton = view.findViewById(R.id.btn_register)
         goToLogin = view.findViewById(R.id.tv_go_to_login)
+
+        firestore = FirebaseFirestore.getInstance()
 
         registerButton.setOnClickListener {
             val name = nameInput.text.toString().trim()
@@ -44,8 +44,7 @@ class RegisterFragment : Fragment() {
             } else if (password != confirmPassword) {
                 Toast.makeText(requireContext(), "Las contraseñas no coinciden", Toast.LENGTH_SHORT).show()
             } else {
-                Toast.makeText(requireContext(), "Registro exitoso (simulado)", Toast.LENGTH_SHORT).show()
-                findNavController().navigate(R.id.loginFragment)
+                registerUser(name, email, password)
             }
         }
 
@@ -54,5 +53,30 @@ class RegisterFragment : Fragment() {
         }
 
         return view
+    }
+
+    private fun registerUser(name: String, email: String, password: String) {
+        registerButton.isEnabled = false
+
+        val userId = UUID.randomUUID().toString()
+        val userMap = mapOf(
+            "id" to userId,
+            "name" to name,
+            "email" to email,
+            "password" to password,
+            "role" to "cliente"
+        )
+
+        firestore.collection("users")
+            .document(userId)
+            .set(userMap)
+            .addOnSuccessListener {
+                Toast.makeText(requireContext(), "Usuario registrado correctamente", Toast.LENGTH_SHORT).show()
+                findNavController().navigate(R.id.loginFragment)
+            }
+            .addOnFailureListener {
+                Toast.makeText(requireContext(), "Error al registrar usuario", Toast.LENGTH_SHORT).show()
+                registerButton.isEnabled = true
+            }
     }
 }

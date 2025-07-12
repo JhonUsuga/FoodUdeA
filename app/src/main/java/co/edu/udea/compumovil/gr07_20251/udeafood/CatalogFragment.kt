@@ -4,12 +4,18 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
-
+import com.google.firebase.firestore.FirebaseFirestore
 
 class CatalogFragment : Fragment() {
+
+    private lateinit var recyclerView: RecyclerView
+    private val firestore = FirebaseFirestore.getInstance()
+    private val restaurants = mutableListOf<Restaurant>()
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -18,23 +24,36 @@ class CatalogFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val rv = view.findViewById<RecyclerView>(R.id.rv_restaurants)
+        recyclerView = view.findViewById(R.id.rv_restaurants)
 
-        val sampleRestaurants = listOf(
-            Restaurant("Domo UdeA", "Bebidas y repostería", "7:00 a.m. - 5:00 p.m.", R.drawable.domo),
-            Restaurant("Empanadas UdeA", "Comida Rapida y snacks", "11:00 a.m. - 3:00 p.m.", R.drawable.empanada),
-            Restaurant("Helados UdeA", "Helados y postres", "10:00 a.m. - 4:00 p.m.", R.drawable.helados)
-        )
-
-        rv.adapter = RestaurantAdapter(sampleRestaurants) { restaurant ->
+        val adapter = RestaurantAdapter(restaurants) { restaurant ->
             val bundle = Bundle().apply {
                 putString("name", restaurant.name)
                 putString("type", restaurant.type)
                 putString("hours", restaurant.hours)
-                putInt("imageResId", restaurant.imageResId)
+                putString("imageUrl", restaurant.imageUrl)
             }
             findNavController().navigate(R.id.restaurantDetailFragment, bundle)
         }
 
+        recyclerView.adapter = adapter
+
+        firestore.collection("stores")
+            .get()
+            .addOnSuccessListener { result ->
+                restaurants.clear()
+                for (doc in result) {
+                    val name = doc.getString("name") ?: continue
+                    val description = doc.getString("description") ?: ""
+                    val hours = doc.getString("hours") ?: ""
+                    val imageUrl = doc.getString("imageUrl") ?: ""
+
+                    restaurants.add(Restaurant(name, description, hours, imageUrl))
+                }
+                adapter.notifyDataSetChanged()
+            }
+            .addOnFailureListener {
+                Toast.makeText(requireContext(), "Error al cargar tiendas", Toast.LENGTH_SHORT).show()
+            }
     }
 }

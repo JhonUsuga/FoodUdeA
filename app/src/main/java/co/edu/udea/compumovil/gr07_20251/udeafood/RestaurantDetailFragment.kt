@@ -9,6 +9,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.bumptech.glide.Glide
 
 class RestaurantDetailFragment : Fragment() {
 
@@ -23,15 +24,21 @@ class RestaurantDetailFragment : Fragment() {
         val name = arguments?.getString("name")
         val type = arguments?.getString("type")
         val hours = arguments?.getString("hours")
-        val imageResId = arguments?.getInt("imageResId") ?: 0
-        val backButton = view.findViewById<Button>(R.id.btn_back_to_list)
-        backButton.setOnClickListener {
-            findNavController().navigateUp()
-        }
+        val imageUrl = arguments?.getString("imageUrl")
 
         view.findViewById<TextView>(R.id.detail_name).text = name
         view.findViewById<TextView>(R.id.detail_type).text = type
         view.findViewById<TextView>(R.id.detail_hours).text = hours
-        view.findViewById<ImageView>(R.id.detail_image).setImageResource(imageResId)
+
+        val imageView = view.findViewById<ImageView>(R.id.detail_image)
+        Glide.with(requireContext())
+            .load(imageUrl)
+            .placeholder(R.drawable.ic_udea_logo)
+            .into(imageView)
+
+        view.findViewById<Button>(R.id.btn_back_to_list).setOnClickListener {
+            findNavController().navigateUp()
+        }
     }
 }
+

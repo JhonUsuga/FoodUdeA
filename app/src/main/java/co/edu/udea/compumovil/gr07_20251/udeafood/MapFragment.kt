@@ -1,11 +1,16 @@
 package co.edu.udea.compumovil.gr07_20251.udeafood
 
+import android.graphics.*
 import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.transition.Transition
+import com.google.firebase.firestore.FirebaseFirestore
 import org.osmdroid.config.Configuration
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
@@ -15,22 +20,6 @@ import org.osmdroid.views.overlay.Marker
 class MapFragment : Fragment() {
 
     private lateinit var map: MapView
-
-    private fun getBitmapIcon(drawableResId: Int): android.graphics.drawable.BitmapDrawable {
-        val drawable = requireContext().getDrawable(drawableResId) ?: return BitmapDrawable()
-
-        val width = 80
-        val height = 80
-
-        val bitmap = android.graphics.Bitmap.createBitmap(width, height, android.graphics.Bitmap.Config.ARGB_8888)
-        val canvas = android.graphics.Canvas(bitmap)
-        drawable.setBounds(0, 0, width, height)
-        drawable.draw(canvas)
-
-        return android.graphics.drawable.BitmapDrawable(resources, bitmap)
-    }
-
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -49,71 +38,89 @@ class MapFragment : Fragment() {
         map.controller.setZoom(18.0)
         map.controller.setCenter(startPoint)
 
-        val fakeStores = listOf(
-            Store(
-                name = "Domo UdeA",
-                location = "Bloque A",
-                open = true,
-                hours = "7:00 - 17:00",
-                minPrice = 3000,
-                imageResId = R.drawable.domo,
-                description = "Frente al bloque 15"
-            ),
-            Store(
-                name = "Empanadas UdeA",
-                location = "Bloque B",
-                open = true,
-                hours = "11:00 - 15:00",
-                minPrice = 2500,
-                imageResId = R.drawable.empanada,
-                description = "Al lado del parqueadero"
-            ),
-            Store(
-                name = "Helados UdeA",
-                location = "Bloque C",
-                open = true,
-                hours = "10:00 - 16:00",
-                minPrice = 4000,
-                imageResId = R.drawable.helados,
-                description = "Detrás de la cafetería"
-            )
-        )
+        val firestore = FirebaseFirestore.getInstance()
 
+        firestore.collection("stores")
+            .get()
+            .addOnSuccessListener { result ->
+                for (doc in result) {
+                    val name = doc.getString("name") ?: continue
+                    val hours = doc.getString("hours") ?: ""
+                    val minPrice = doc.getLong("minPrice")?.toInt() ?: 0
+                    val location = doc.getString("location") ?: ""
+                    val description = doc.getString("description") ?: ""
+                    val imageUrl = doc.getString("imageUrl") ?: ""
 
-        val locations = listOf(
-            GeoPoint(6.2676, -75.5680),
-            GeoPoint(6.2678, -75.5670),
-            GeoPoint(6.2672, -75.5685)
-        )
+                    val parts = location.split(",")
+                    if (parts.size == 2) {
+                        val lat = parts[0].trim().toDoubleOrNull()
+                        val lon = parts[1].trim().toDoubleOrNull()
 
-        for ((index, store) in fakeStores.withIndex()) {
-            val marker = Marker(map)
-            marker.position = locations[index]
-            marker.title = store.name
-            marker.subDescription = "Horario: ${store.hours}\nDesde $${store.minPrice}"
-            marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
-            marker.icon = getBitmapIcon(store.imageResId)
-            marker.setOnMarkerClickListener { m, _ ->
-                m.showInfoWindow()
-                true
+                        if (lat != null && lon != null) {
+                            val geo = GeoPoint(lat, lon)
+                            loadMarkerIcon(imageUrl, geo, name, hours, minPrice, description)
+                        }
+                    }
+                }
             }
-            map.overlays.add(marker)
+            .addOnFailureListener {
+                Toast.makeText(requireContext(), "Error al cargar tiendas", Toast.LENGTH_SHORT).show()
+            }
+    }
+
+    private fun loadMarkerIcon(
+        imageUrl: String,
+        position: GeoPoint,
+        name: String,
+        hours: String,
+        price: Int,
+        description: String
+    ) {
+        Glide.with(this)
+            .asBitmap()
+            .load(imageUrl)
+            .circleCrop()
+            .into(object : CustomTarget<Bitmap>(100, 100) {
+                override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+                    val marker = Marker(map)
+                    marker.position = position
+                    marker.title = name
+                    marker.subDescription = "Horario: $hours\nDesde $$price\n$description"
+                    marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
+                    marker.icon = BitmapDrawable(resources, makeDropShape(resource))
+                    marker.setOnMarkerClickListener { m, _ ->
+                        m.showInfoWindow()
+                        true
+                    }
+                    map.overlays.add(marker)
+                    map.invalidate()
+                }
+
+                override fun onLoadCleared(placeholder: Drawable?) {}
+            })
+    }
+
+    private fun makeDropShape(original: Bitmap): Bitmap {
+        val size = 100
+        val output = Bitmap.createBitmap(size, size + 20, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(output)
+
+        val path = Path().apply {
+            moveTo(size / 2f, 0f)
+            quadTo(size.toFloat(), size.toFloat() / 2, size / 2f, (size + 20).toFloat())
+            quadTo(0f, size.toFloat() / 2, size / 2f, 0f)
+            close()
         }
 
+        val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+        paint.color = Color.WHITE
+        canvas.drawPath(path, paint)
 
-        // También mostrar la tienda del usuario (si existe)
-        CreateStoreFragment.userStore?.let { store ->
-            val marker = Marker(map)
-            marker.position = GeoPoint(6.2675, -75.5675)
-            marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
-            marker.title = "${store.name} - ${store.hours}"
-            marker.subDescription = "Desde $${store.minPrice}"
-            marker.setOnMarkerClickListener { m, _ ->
-                m.showInfoWindow()
-                true
-            }
-            map.overlays.add(marker)
-        }
+        val shader = BitmapShader(original, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP)
+        paint.shader = shader
+        canvas.drawPath(path, paint)
+
+        return output
     }
 
     override fun onResume() {
@@ -126,3 +133,5 @@ class MapFragment : Fragment() {
         map.onPause()
     }
 }
+
+

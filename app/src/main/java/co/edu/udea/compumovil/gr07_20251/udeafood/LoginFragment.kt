@@ -1,36 +1,34 @@
 package co.edu.udea.compumovil.gr07_20251.udeafood
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
-import android.widget.Toast
+import android.view.*
+import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.google.firebase.firestore.FirebaseFirestore
 
 class LoginFragment : Fragment() {
 
     private lateinit var emailInput: EditText
     private lateinit var passwordInput: EditText
     private lateinit var loginButton: Button
+    private lateinit var firestore: FirebaseFirestore
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_login, container, false)
+        return inflater.inflate(R.layout.fragment_login, container, false)
+    }
 
-        // Campos de entrada y botón
-        val emailInput = view.findViewById<EditText>(R.id.input_email)
-        val passwordInput = view.findViewById<EditText>(R.id.input_password)
-        val loginButton = view.findViewById<Button>(R.id.btn_login)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        emailInput = view.findViewById(R.id.input_email)
+        passwordInput = view.findViewById(R.id.input_password)
+        loginButton = view.findViewById(R.id.btn_login)
 
-        // Este es el botón de "crear cuenta"
-        val createAccount = view.findViewById<TextView>(R.id.tv_create_account)
-        createAccount.setOnClickListener {
+        firestore = FirebaseFirestore.getInstance()
+
+        view.findViewById<TextView>(R.id.tv_create_account).setOnClickListener {
             findNavController().navigate(R.id.registerFragment)
         }
 
@@ -40,16 +38,58 @@ class LoginFragment : Fragment() {
 
             if (email.isEmpty() || password.isEmpty()) {
                 Toast.makeText(requireContext(), "Completa todos los campos", Toast.LENGTH_SHORT).show()
-            } else {
-                // Simulación de login correcto
-                if (email == "estudiante@udea.edu.co" && password == "1234") {
-                    findNavController().navigate(R.id.mapFragment)
-                } else {
-                    Toast.makeText(requireContext(), "Correo o contraseña incorrectos", Toast.LENGTH_SHORT).show()
-                }
+                return@setOnClickListener
             }
-        }
 
-        return view
+            loginButton.isEnabled = false
+
+            // Verificar si es tienda
+            firestore.collection("stores")
+                .whereEqualTo("email", email)
+                .get()
+                .addOnSuccessListener { storeResult ->
+                    if (!storeResult.isEmpty) {
+                        val storeDoc = storeResult.documents[0]
+                        val storedPassword = storeDoc.getString("password")
+                        if (storedPassword == password) {
+                            val store = storeDoc.toObject(Store::class.java)
+                            CreateStoreFragment.userStore = store
+                            Toast.makeText(requireContext(), "Bienvenido comerciante", Toast.LENGTH_SHORT).show()
+                            findNavController().navigate(R.id.addProductFragment)
+                        } else {
+                            Toast.makeText(requireContext(), "Contraseña incorrecta", Toast.LENGTH_SHORT).show()
+                        }
+                        loginButton.isEnabled = true
+                    } else {
+                        // Si no es tienda, verificar si es usuario (cliente)
+                        firestore.collection("users")
+                            .whereEqualTo("email", email)
+                            .get()
+                            .addOnSuccessListener { userResult ->
+                                if (!userResult.isEmpty) {
+                                    val userDoc = userResult.documents[0]
+                                    val storedPassword = userDoc.getString("password")
+                                    if (storedPassword == password) {
+                                        Toast.makeText(requireContext(), "Bienvenido cliente", Toast.LENGTH_SHORT).show()
+                                        findNavController().navigate(R.id.mapFragment)
+                                    } else {
+                                        Toast.makeText(requireContext(), "Contraseña incorrecta", Toast.LENGTH_SHORT).show()
+                                    }
+                                } else {
+                                    Toast.makeText(requireContext(), "Usuario no encontrado", Toast.LENGTH_SHORT).show()
+                                }
+                                loginButton.isEnabled = true
+                            }
+                            .addOnFailureListener {
+                                Toast.makeText(requireContext(), "Error al buscar usuario", Toast.LENGTH_SHORT).show()
+                                loginButton.isEnabled = true
+                            }
+                    }
+                }
+                .addOnFailureListener {
+                    Toast.makeText(requireContext(), "Error al buscar tienda", Toast.LENGTH_SHORT).show()
+                    loginButton.isEnabled = true
+                }
+        }
     }
 }

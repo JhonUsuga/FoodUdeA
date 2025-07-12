@@ -1,24 +1,23 @@
 package co.edu.udea.compumovil.gr07_20251.udeafood
+
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import co.edu.udea.compumovil.gr07_20251.udeafood.R
-import co.edu.udea.compumovil.gr07_20251.udeafood.Restaurant
+import com.bumptech.glide.Glide
 
 class RestaurantAdapter(
     private val restaurants: List<Restaurant>,
     private val onClick: (Restaurant) -> Unit
 ) : RecyclerView.Adapter<RestaurantAdapter.ViewHolder>() {
 
-
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val img = itemView.findViewById<ImageView>(R.id.img_restaurant)
-        val name = itemView.findViewById<TextView>(R.id.tv_name)
-        val type = itemView.findViewById<TextView>(R.id.tv_type)
-        val hours = itemView.findViewById<TextView>(R.id.tv_hours)
+        val img: ImageView = itemView.findViewById(R.id.img_restaurant)
+        val name: TextView = itemView.findViewById(R.id.tv_name)
+        val type: TextView = itemView.findViewById(R.id.tv_type)
+        val hours: TextView = itemView.findViewById(R.id.tv_hours)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -32,9 +31,12 @@ class RestaurantAdapter(
         holder.name.text = item.name
         holder.type.text = item.type
         holder.hours.text = item.hours
-        holder.img.setImageResource(item.imageResId)
 
-        // Click listener para navegar
+        Glide.with(holder.itemView.context)
+            .load(item.imageUrl)
+            .placeholder(R.drawable.ic_udea_logo)
+            .into(holder.img)
+
         holder.itemView.setOnClickListener {
             onClick(item)
         }
