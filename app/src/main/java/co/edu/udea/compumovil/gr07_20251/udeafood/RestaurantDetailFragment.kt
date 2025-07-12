@@ -21,7 +21,6 @@ class RestaurantDetailFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val name = arguments?.getString("name")
-        val type = arguments?.getString("type")
         val hours = arguments?.getString("hours")
         val imageResId = arguments?.getInt("imageResId") ?: 0
         val backButton = view.findViewById<Button>(R.id.btn_back_to_list)
@@ -30,7 +29,6 @@ class RestaurantDetailFragment : Fragment() {
         }
 
         view.findViewById<TextView>(R.id.detail_name).text = name
-        view.findViewById<TextView>(R.id.detail_type).text = type
         view.findViewById<TextView>(R.id.detail_hours).text = hours
         view.findViewById<ImageView>(R.id.detail_image).setImageResource(imageResId)
     }

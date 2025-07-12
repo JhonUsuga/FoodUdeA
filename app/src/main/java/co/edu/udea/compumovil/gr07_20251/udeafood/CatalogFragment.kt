@@ -20,18 +20,17 @@ class CatalogFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val rv = view.findViewById<RecyclerView>(R.id.rv_restaurants)
 
-        val sampleRestaurants = listOf(
-            Restaurant("Domo UdeA", "Bebidas y repostería", "7:00 a.m. - 5:00 p.m.", R.drawable.domo),
-            Restaurant("Empanadas UdeA", "Comida Rapida y snacks", "11:00 a.m. - 3:00 p.m.", R.drawable.empanada),
-            Restaurant("Helados UdeA", "Helados y postres", "10:00 a.m. - 4:00 p.m.", R.drawable.helados)
+        val sampleStores = listOf(
+            Store("10394","Domo UdeA", "Ubicacion", "Algo sobre el restaurante", true, "7:00 a.m. - 5:00 p.m.", 2000,  R.drawable.domo),
+            Store("31241","Empanadas UdeA", "Ubicacion", "Algo sobre el restaurante", true, "11:00 a.m. - 3:00 p.m.", 3000, R.drawable.empanada),
+            Store("55253","Helados UdeA", "Ubicacion", "Algo sobre el restaurante", true, "10:00 a.m. - 4:00 p.m.", 5000, R.drawable.helados)
         )
 
-        rv.adapter = RestaurantAdapter(sampleRestaurants) { restaurant ->
+        rv.adapter = StoreAdapter(sampleStores) { store ->
             val bundle = Bundle().apply {
-                putString("name", restaurant.name)
-                putString("type", restaurant.type)
-                putString("hours", restaurant.hours)
-                putInt("imageResId", restaurant.imageResId)
+                putString("name", store.name)
+                putString("hours", store.hours)
+                putInt("imageResId", store.imageResId)
             }
             findNavController().navigate(R.id.restaurantDetailFragment, bundle)
         }
