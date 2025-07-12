@@ -5,7 +5,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import co.edu.udea.compumovil.gr07_20251.udeafood.R
 
 class FavoritesFragment : Fragment() {
     override fun onCreateView(

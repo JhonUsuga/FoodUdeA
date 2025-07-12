@@ -27,12 +27,32 @@
             android:hint="Nombre de la tienda"
             android:layout_marginBottom="12dp" />
 
-        <!-- Ubicación -->
-        <EditText
-            android:id="@+id/input_store_location"
+        <!-- Botón para elegir ubicación -->
+        <Button
+            android:id="@+id/btn_pick_location"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Ubicación"
+            android:text="Seleccionar ubicación en el mapa"
+            android:layout_marginBottom="8dp"
+            android:backgroundTint="#4CAF50"
+            android:textColor="#FFFFFF" />
+
+        <!-- Coordenadas (invisible al principio) -->
+        <TextView
+            android:id="@+id/text_selected_location"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textColor="#000000"
+            android:textSize="14sp"
+            android:layout_marginBottom="8dp" />
+
+        <!-- Descripción adicional -->
+        <EditText
+            android:id="@+id/input_location_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Descripción de la ubicación (ej: detrás del bloque 19)"
             android:layout_marginBottom="12dp" />
 
         <!-- Horario -->
@@ -71,3 +91,4 @@
 
     </LinearLayout>
 </ScrollView>
+

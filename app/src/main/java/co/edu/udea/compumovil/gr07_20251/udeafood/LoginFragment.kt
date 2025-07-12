@@ -28,7 +28,7 @@ class LoginFragment : Fragment() {
         val passwordInput = view.findViewById<EditText>(R.id.input_password)
         val loginButton = view.findViewById<Button>(R.id.btn_login)
 
-        // ✅ Este es el botón de "crear cuenta"
+        // Este es el botón de "crear cuenta"
         val createAccount = view.findViewById<TextView>(R.id.tv_create_account)
         createAccount.setOnClickListener {
             findNavController().navigate(R.id.registerFragment)
@@ -43,7 +43,7 @@ class LoginFragment : Fragment() {
             } else {
                 // Simulación de login correcto
                 if (email == "estudiante@udea.edu.co" && password == "1234") {
-                    findNavController().navigate(R.id.homeFragment)
+                    findNavController().navigate(R.id.mapFragment)
                 } else {
                     Toast.makeText(requireContext(), "Correo o contraseña incorrectos", Toast.LENGTH_SHORT).show()
                 }

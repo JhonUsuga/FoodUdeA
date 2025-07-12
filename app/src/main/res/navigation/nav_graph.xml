@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/loginFragment">
+    app:startDestination="@+id/splashFragment">
 
     <fragment
         android:id="@+id/homeFragment"
@@ -11,14 +11,10 @@
         android:label="Inicio" />
 
     <fragment
-        android:id="@+id/catalogFragment"
-        android:name="co.edu.udea.compumovil.gr07_20251.udeafood.CatalogFragment"
-        android:label="Catálogo" />
-
-    <fragment
         android:id="@+id/mapFragment"
         android:name="co.edu.udea.compumovil.gr07_20251.udeafood.MapFragment"
-        android:label="Mapa" />
+        android:label="Mapa"
+        tools:layout="@layout/fragment_osm_map" />
 
     <fragment
         android:id="@+id/favoritesFragment"
@@ -82,5 +78,35 @@
         android:name="co.edu.udea.compumovil.gr07_20251.udeafood.AddProductFragment"
         android:label="Agregar Producto"
         tools:layout="@layout/fragment_add_product" />
+
+    <fragment
+        android:id="@+id/storeMenuFragment"
+        android:name="co.edu.udea.compumovil.gr07_20251.udeafood.StoreMenuFragment"
+        android:label="Menú de Tienda"
+        tools:layout="@layout/fragment_store_menu" />
+
+    <fragment
+        android:id="@+id/splashFragment"
+        android:name="co.edu.udea.compumovil.gr07_20251.udeafood.SplashFragment"
+        android:label="Splash"
+        tools:layout="@layout/fragment_home">
+        <action
+            android:id="@+id/action_splashFragment_to_mapFragment"
+            app:destination="@+id/mapFragment"
+            app:popUpTo="@id/splashFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/roleSelectionFragment"
+        android:name="co.edu.udea.compumovil.gr07_20251.udeafood.RoleSelectionFragment"
+        android:label="Seleccionar Rol" />
+
+
+    <fragment
+        android:id="@+id/pickLocationFragment"
+        android:name="co.edu.udea.compumovil.gr07_20251.udeafood.PickLocationFragment"
+        android:label="Seleccionar Ubicación"
+        tools:layout="@layout/fragment_pick_location" />
 
 </navigation>

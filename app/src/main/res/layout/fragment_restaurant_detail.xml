@@ -39,5 +39,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="#666666" />
+
+        <Button
+            android:id="@+id/btn_back_to_list"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="← Volver"
+            android:layout_marginBottom="16dp" />
+
     </LinearLayout>
 </ScrollView>

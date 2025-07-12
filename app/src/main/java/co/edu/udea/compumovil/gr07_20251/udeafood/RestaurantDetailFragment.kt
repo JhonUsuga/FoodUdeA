@@ -4,9 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 
 class RestaurantDetailFragment : Fragment() {
 
@@ -22,6 +24,10 @@ class RestaurantDetailFragment : Fragment() {
         val type = arguments?.getString("type")
         val hours = arguments?.getString("hours")
         val imageResId = arguments?.getInt("imageResId") ?: 0
+        val backButton = view.findViewById<Button>(R.id.btn_back_to_list)
+        backButton.setOnClickListener {
+            findNavController().navigateUp()
+        }
 
         view.findViewById<TextView>(R.id.detail_name).text = name
         view.findViewById<TextView>(R.id.detail_type).text = type
