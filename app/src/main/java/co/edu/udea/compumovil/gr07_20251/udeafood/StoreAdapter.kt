@@ -18,6 +18,10 @@ class StoreAdapter(
         val img = itemView.findViewById<ImageView>(R.id.img_restaurant)
         val name = itemView.findViewById<TextView>(R.id.tv_name)
         val hours = itemView.findViewById<TextView>(R.id.tv_hours)
+        val location = itemView.findViewById<TextView>(R.id.tv_location)
+        val state = itemView.findViewById<TextView>(R.id.tv_state)
+        val stateImg = itemView.findViewById<ImageView>(R.id.img_state)
+        val minPrice = itemView.findViewById<TextView>(R.id.tv_minPrice)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -31,6 +35,12 @@ class StoreAdapter(
         holder.name.text = item.name
         holder.hours.text = item.hours
         holder.img.setImageResource(item.imageResId)
+        holder.location.text = item.location
+        if (item.open) {
+            holder.state.text = "Abierto"
+            holder.stateImg.setImageResource(R.drawable.ic_abierto)
+        }
+        holder.minPrice.text = "Desde $" + item.minPrice
 
         // Click listener para navegar
         holder.itemView.setOnClickListener {
