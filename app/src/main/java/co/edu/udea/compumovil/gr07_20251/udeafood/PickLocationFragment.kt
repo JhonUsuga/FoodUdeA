@@ -26,7 +26,7 @@ class PickLocationFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        map = view.findViewById(R.id.osm_map)
+        map = view.findViewById(R.id.map_location_picker)
         map.setTileSource(TileSourceFactory.MAPNIK)
         map.setMultiTouchControls(true)
 
