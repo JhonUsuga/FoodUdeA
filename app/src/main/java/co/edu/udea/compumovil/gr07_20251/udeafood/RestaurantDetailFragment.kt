@@ -23,6 +23,9 @@ class RestaurantDetailFragment : Fragment() {
         val name = arguments?.getString("name")
         val hours = arguments?.getString("hours")
         val imageResId = arguments?.getInt("imageResId") ?: 0
+        val description = arguments?.getString("description")
+        val location = arguments?.getString("location")
+        val minPrice = arguments?.getInt("minPrice") ?: 0
         val backButton = view.findViewById<Button>(R.id.btn_back_to_list)
         backButton.setOnClickListener {
             findNavController().navigateUp()
@@ -31,5 +34,8 @@ class RestaurantDetailFragment : Fragment() {
         view.findViewById<TextView>(R.id.detail_name).text = name
         view.findViewById<TextView>(R.id.detail_hours).text = hours
         view.findViewById<ImageView>(R.id.detail_image).setImageResource(imageResId)
+        view.findViewById<TextView>(R.id.textUbicacion).text = location
+        view.findViewById<TextView>(R.id.textDescripcion).text = description
+        view.findViewById<TextView>(R.id.textPrecioDesde).text = "" + minPrice
     }
 }

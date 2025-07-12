@@ -31,6 +31,9 @@ class CatalogFragment : Fragment() {
                 putString("name", store.name)
                 putString("hours", store.hours)
                 putInt("imageResId", store.imageResId)
+                putString("description", store.description)
+                putString("location", store.location)
+                putInt("minPrice", store.minPrice)
             }
             findNavController().navigate(R.id.restaurantDetailFragment, bundle)
         }
